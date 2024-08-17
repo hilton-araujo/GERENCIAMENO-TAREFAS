@@ -19,7 +19,11 @@ public class TaskService {
     public void registar(DadosCadastroTarefa dto){
         try {
             Task task;
+
+
             task = new Task();
+
+
             task.setDescription(dto.description());
             task.setCreate_data(dto.create_date());
             task.setFinish_data(dto.finish_date());

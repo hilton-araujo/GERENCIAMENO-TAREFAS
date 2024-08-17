@@ -1,0 +1,62 @@
+package com.gerenciamento.terefas.controllers;
+
+
+
+import com.gerenciamento.terefas.dto.AuthDTO;
+import com.gerenciamento.terefas.dto.AuthResisterDTO;
+import com.gerenciamento.terefas.dto.ResponseApi;
+import com.gerenciamento.terefas.entity.Auth;
+import com.gerenciamento.terefas.infra.TokenService;
+import com.gerenciamento.terefas.repository.AuthRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping(value = "/api")
+public class AuthController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AuthRepository repository;
+
+    @Autowired
+    private TokenService tokenService;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseApi> login(@RequestBody @Valid AuthDTO data){
+        var usenamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var auth = this.authenticationManager.authenticate(usenamePassword);
+        var token = tokenService.gerarToken((Auth) auth.getPrincipal());
+
+        Map<String, String> userAuthToken = new HashMap<>();
+        userAuthToken.put("token", token);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Login efectuado com sucesso", userAuthToken));
+    }
+
+    @PostMapping("/resister")
+    public ResponseEntity<?> resister(@RequestBody @Valid AuthResisterDTO data){
+        if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        String encriptedPassword = new BCryptPasswordEncoder().encode(data.password());
+
+        Auth newUser = new Auth(data.login(), encriptedPassword, data.roles());
+
+        this.repository.save(newUser);
+        return ResponseEntity.ok().build();
+    }
+}

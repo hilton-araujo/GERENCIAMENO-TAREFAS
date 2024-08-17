@@ -15,7 +15,7 @@ public class TaskController {
     @Autowired
     private TaskService service;
 
-    @PostMapping
+    @PostMapping(value = "/task")
     @Transactional
     public ResponseEntity<Void> cadastrar(@RequestBody @Valid DadosCadastroTarefa dadosCadastroTarefa){
         try {

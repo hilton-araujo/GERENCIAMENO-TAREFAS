@@ -16,18 +16,19 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(name = "id", unique = true, nullable = false)
+    private String id;
 
-    @Column(name = "description", unique = true)
+    @Column(name = "description", unique = true, nullable = false)
     private String description;
 
-    @Column(name = "create_data", unique = true)
+    @Column(name = "create_data", unique = true, nullable = false)
     private LocalDate create_data;
 
-    @Column(name = "finish_data", unique = true)
+    @Column(name = "finish_data", unique = true, nullable = false)
     private LocalDate finish_data;
 
-    @Column(name = "status", unique = true)
+    @Column(name = "status", unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 }
