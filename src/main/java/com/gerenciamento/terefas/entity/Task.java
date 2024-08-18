@@ -19,16 +19,16 @@ public class Task {
     @Column(name = "id", unique = true, nullable = false)
     private String id;
 
-    @Column(name = "description", unique = true, nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "create_data", unique = true, nullable = false)
+    @Column(name = "create_data", nullable = false)
     private LocalDate create_data;
 
-    @Column(name = "finish_data", unique = true, nullable = false)
+    @Column(name = "finish_data",  nullable = false)
     private LocalDate finish_data;
 
-    @Column(name = "status", unique = true, nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 }
