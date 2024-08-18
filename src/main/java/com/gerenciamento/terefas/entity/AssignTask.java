@@ -1,5 +1,6 @@
 package com.gerenciamento.terefas.entity;
 
+import com.gerenciamento.terefas.dto.AssignTaskDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,4 @@ public class AssignTask {
     @ManyToOne
     @JoinColumn(name = "funcionario_id", nullable = false)
     private Funcionario funcionario;
-
 }

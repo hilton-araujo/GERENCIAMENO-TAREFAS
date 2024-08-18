@@ -5,12 +5,10 @@ import com.gerenciamento.terefas.dto.ResponseApi;
 import com.gerenciamento.terefas.service.AssignTaskService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -34,5 +32,15 @@ public class AssignTaskController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseApi("Erro ao atribuir tarefa", null));
         }
+    }
+
+    @GetMapping(value = "/assign-task")
+    public ResponseEntity<ResponseApi> listarTodasTarefasAtribuidas () throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Todas tarefas atribuidas", service.listarTodasTarefasAtribuidas()));
+    }
+
+    @GetMapping(value = "/employee/assign-task/{id}")
+    public ResponseEntity<ResponseApi> listarTarefasAtribuidasFuncionario (@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Todas tarefas atribuidas ao funcionario co id "+id, service.listarTarefasPorFuncionario(id)));
     }
 }

@@ -1,13 +1,15 @@
 package com.gerenciamento.terefas.dto;
 
-import jakarta.validation.constraints.NotNull;
+import com.gerenciamento.terefas.entity.Funcionario;
+import com.gerenciamento.terefas.entity.Task;
+import jakarta.validation.constraints.NotBlank;
 
 public record AssignTaskDTO(
 
-        @NotNull(message = "A tarefa não pode ser nulo")
+        @NotBlank(message = "A tarefa não pode ser nulo")
         String taskId,
 
-        @NotNull(message = "O funcionario não pode ser nulo")
+        @NotBlank(message = "O funcionario não pode ser nulo")
         String funcionarioId
 ) {
 }
