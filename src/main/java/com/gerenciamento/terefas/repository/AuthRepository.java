@@ -6,7 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuthRepository extends JpaRepository<Auth, String> {
+public interface AuthRepository extends JpaRepository<Auth, Long> {
+    UserDetails findByUsername(String username);
 
-    UserDetails findByLogin(String login);
+    Boolean existsByUsername(String username);
 }

@@ -10,8 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Table(name = "users")
 @Entity(name = "Users")
@@ -25,27 +24,40 @@ public class Auth implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String login;
+    private String username;
 
     private String password;
+
+    @JoinColumn(name = "created_by")
+    private String createdBy;
+    @JoinColumn(name = "updated_by")
+    private String updatedBy;
 
     private Roles role;
 
     public Auth(String login, String encriptedPassword, Roles roles) {
-        this.login = login;
+        this.username = login;
         this.password = encriptedPassword;
         this.role = roles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == Roles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == Roles.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+        } else {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+        }
     }
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override

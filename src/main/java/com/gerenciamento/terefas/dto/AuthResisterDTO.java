@@ -4,7 +4,7 @@ import com.gerenciamento.terefas.enums.Roles;
 
 public record AuthResisterDTO(
 
-        String login,
+        String username,
 
         String password,
 

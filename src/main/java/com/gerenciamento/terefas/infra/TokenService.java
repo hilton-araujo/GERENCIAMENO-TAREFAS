@@ -18,14 +18,17 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
+    private static final String ISSUER = "remedios_api";
+
     public String gerarToken(Auth usuario) {
         try {
             var algorithm = Algorithm.HMAC256(secret);
-            return JWT.create()
+            String token = JWT.create()
                     .withIssuer("remedios_api")
-                    .withSubject(usuario.getLogin())
+                    .withSubject(usuario.getUsername())
                     .withExpiresAt(dataExpiracao())
                     .sign(algorithm);
+            return token;
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro ao gerar token", exception);
         }
@@ -39,13 +42,26 @@ public class TokenService {
                     .build()
                     .verify(TokenJWT)
                     .getSubject();
-
         } catch (JWTVerificationException exception){
             throw new RuntimeException("Token invalido ou expirado.");
         }
     }
 
+
     private Instant dataExpiracao() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.UTC); // Use UTC para evitar problemas de timezone
+    }
+
+    // Exceções personalizadas
+    public static class TokenCreationException extends RuntimeException {
+        public TokenCreationException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
+    public static class TokenVerificationException extends RuntimeException {
+        public TokenVerificationException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

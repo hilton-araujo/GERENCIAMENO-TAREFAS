@@ -39,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseApi> login(@RequestBody @Valid AuthDTO data){
-        var usenamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        var usenamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(usenamePassword);
         var token = tokenService.gerarToken((Auth) auth.getPrincipal());
 
@@ -51,10 +51,10 @@ public class AuthController {
 
     @PostMapping("/resister")
     public ResponseEntity<?> resister(@RequestBody @Valid AuthResisterDTO data){
-        if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
+        if (this.repository.findByUsername(data.username()) != null) return ResponseEntity.badRequest().build();
         String encriptedPassword = new BCryptPasswordEncoder().encode(data.password());
 
-        Auth newUser = new Auth(data.login(), encriptedPassword, data.roles());
+        Auth newUser = new Auth(data.username(), encriptedPassword, data.roles());
 
         this.repository.save(newUser);
         return ResponseEntity.ok().build();
