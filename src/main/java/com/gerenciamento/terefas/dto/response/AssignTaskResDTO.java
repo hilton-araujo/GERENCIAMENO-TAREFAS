@@ -1,6 +1,6 @@
 package com.gerenciamento.terefas.dto.response;
 
-import jakarta.validation.constraints.NotBlank;
+import com.gerenciamento.terefas.entity.Task;
 
 public record AssignTaskResDTO (
 
@@ -11,3 +11,4 @@ public record AssignTaskResDTO (
         String funcionario
 ){
 }
+

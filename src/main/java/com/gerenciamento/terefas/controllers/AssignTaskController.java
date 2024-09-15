@@ -43,4 +43,9 @@ public class AssignTaskController {
     public ResponseEntity<ResponseApi> listarTarefasAtribuidasFuncionario (@PathVariable String id) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Todas tarefas atribuidas ao funcionario co id "+id, service.listarTarefasPorFuncionario(id)));
     }
+
+    @GetMapping(value = "/assign-task/{id}")
+    public ResponseEntity<ResponseApi> listarTarefaAtribuida (@PathVariable String id) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Todas tarefa atribuida com id: "+id, service.listarTarefaAtribuida(id)));
+    }
 }

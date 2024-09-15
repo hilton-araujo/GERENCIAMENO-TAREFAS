@@ -1,6 +1,7 @@
 package com.gerenciamento.terefas.service;
 
 import com.gerenciamento.terefas.dto.AssignTaskDTO;
+import com.gerenciamento.terefas.dto.response.AssignTaskDetails;
 import com.gerenciamento.terefas.dto.response.AssignTaskResDTO;
 import com.gerenciamento.terefas.dto.response.EmployeeAssignTaskResDTO;
 import com.gerenciamento.terefas.entity.AssignTask;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssignTaskService {
@@ -76,22 +78,29 @@ public class AssignTaskService {
         return dtos;
     }
 
-    public List<EmployeeAssignTaskResDTO> listarTarefasPorFuncionario(String funcionarioId) {
+    public EmployeeAssignTaskResDTO listarTarefasPorFuncionario(String funcionarioId) {
         Funcionario funcionario = funcionarioRepository.findById(funcionarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionario não encontrado"));
 
         List<AssignTask> tasks = assignTaskRepository.findByFuncionario(funcionario);
 
-        List<EmployeeAssignTaskResDTO> dtos = new ArrayList<>();
-
-        for (AssignTask assignTask : tasks) {
-            EmployeeAssignTaskResDTO assignTaskResDTO = new EmployeeAssignTaskResDTO(
-                    assignTask.getId(),
-                    assignTask.getTask(),
-                    assignTask.getFuncionario()
-            );
-            dtos.add(assignTaskResDTO);
-        }
-        return dtos;
+        // Retorna um DTO com os dados do funcionário e suas tarefas
+        return new EmployeeAssignTaskResDTO(funcionario, tasks);
     }
+
+    public AssignTaskDetails listarTarefaAtribuida(String assignTaskId) {
+        // Busca a tarefa pelo ID ou lança uma exceção se não for encontrada
+        AssignTask assignTask = assignTaskRepository.findById(assignTaskId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tarefa atribuída não encontrada"));
+        // Converte a tarefa encontrada para um DTO (detalhes da tarefa)
+        AssignTaskDetails assignTaskDetails = new AssignTaskDetails(
+                assignTask.getId(),
+                assignTask.getTask(),
+                assignTask.getFuncionario()
+        );
+        // Retorna o DTO diretamente, não uma lista
+        return assignTaskDetails;
+    }
+
+
 }
