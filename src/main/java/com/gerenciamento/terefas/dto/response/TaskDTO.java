@@ -1,7 +1,9 @@
 package com.gerenciamento.terefas.dto.response;
 
 import com.gerenciamento.terefas.entity.Task;
+import com.gerenciamento.terefas.enums.Status;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public record TaskDTO(

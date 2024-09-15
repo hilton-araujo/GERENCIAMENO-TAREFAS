@@ -1,10 +1,16 @@
 package com.gerenciamento.terefas.service;
 
 import com.gerenciamento.terefas.dto.DadosCadastroTarefa;
+import com.gerenciamento.terefas.dto.response.TaskDTO;
+import com.gerenciamento.terefas.dto.response.TaskDTOS;
 import com.gerenciamento.terefas.entity.Task;
 import com.gerenciamento.terefas.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -34,5 +40,23 @@ public class TaskService {
         } catch (Exception e) {
 
         }
+    }
+
+    public List<TaskDTOS> listarTodasTarefas() throws ChangeSetPersister.NotFoundException{
+        List<Task> tasks = repository.findAll();
+
+        List<TaskDTOS> dtos = new ArrayList<>();
+
+        for (Task task : tasks) {
+            TaskDTOS dto = new TaskDTOS(
+                    task.getId(),
+                    task.getDescription(),
+                    task.getCreate_data(),
+                    task.getFinish_data(),
+                    task.getStatus()
+            );
+            dtos.add(dto);
+        }
+        return dtos;
     }
 }

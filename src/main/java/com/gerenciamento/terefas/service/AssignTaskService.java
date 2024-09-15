@@ -84,21 +84,18 @@ public class AssignTaskService {
 
         List<AssignTask> tasks = assignTaskRepository.findByFuncionario(funcionario);
 
-        // Retorna um DTO com os dados do funcionário e suas tarefas
         return new EmployeeAssignTaskResDTO(funcionario, tasks);
     }
 
     public AssignTaskDetails listarTarefaAtribuida(String assignTaskId) {
-        // Busca a tarefa pelo ID ou lança uma exceção se não for encontrada
         AssignTask assignTask = assignTaskRepository.findById(assignTaskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tarefa atribuída não encontrada"));
-        // Converte a tarefa encontrada para um DTO (detalhes da tarefa)
+
         AssignTaskDetails assignTaskDetails = new AssignTaskDetails(
                 assignTask.getId(),
                 assignTask.getTask(),
                 assignTask.getFuncionario()
         );
-        // Retorna o DTO diretamente, não uma lista
         return assignTaskDetails;
     }
 

@@ -6,6 +6,7 @@ import com.gerenciamento.terefas.service.TaskService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,11 @@ public class TaskController {
 
         }
         return null;
+    }
+
+    @GetMapping(value = "/task")
+    public ResponseEntity<ResponseApi> listarTodasTarefas() throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseApi("Todas tarefas", service.listarTodasTarefas()));
     }
 
 }
